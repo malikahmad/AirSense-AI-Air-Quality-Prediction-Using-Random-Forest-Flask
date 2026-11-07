@@ -1,0 +1,1103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AirSense | Air Quality Predictor</title>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --background: #f1f5f9;
+            --card: #ffffff;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(37, 99, 235, 0.12),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 90%,
+                    rgba(16, 185, 129, 0.10),
+                    transparent 30%
+                ),
+                var(--background);
+
+            color: var(--text);
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            height: 70px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 6%;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            background: #dbeafe;
+            color: var(--primary);
+
+            font-size: 20px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .container {
+            width: 92%;
+            max-width: 1180px;
+            margin: 45px auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+
+            padding: 7px 14px;
+            border-radius: 999px;
+
+            background: #dbeafe;
+            color: #1d4ed8;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            line-height: 1.1;
+
+            letter-spacing: -1.5px;
+
+            margin-bottom: 14px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* =========================
+           LAYOUT
+        ========================= */
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+
+            border: 1px solid var(--border);
+            border-radius: 20px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, 0.06);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 750;
+        }
+
+        .card-subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .measurement-badge {
+            padding: 7px 11px;
+
+            background: #f1f5f9;
+            color: #475569;
+
+            border-radius: 8px;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+
+            height: 48px;
+
+            padding: 0 13px;
+
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+
+            background: #ffffff;
+
+            font-size: 14px;
+            color: var(--text);
+
+            outline: none;
+
+            transition:
+                border-color 0.2s,
+                box-shadow 0.2s;
+        }
+
+        input:hover {
+            border-color: #94a3b8;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+        }
+
+        .unit {
+            margin-top: 6px;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+        }
+
+        /* =========================
+           BUTTON
+        ========================= */
+
+        .predict-button {
+            width: 100%;
+
+            height: 52px;
+
+            margin-top: 25px;
+
+            border: none;
+            border-radius: 11px;
+
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #1d4ed8
+            );
+
+            color: white;
+
+            font-size: 15px;
+            font-weight: 750;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                opacity 0.2s;
+        }
+
+        .predict-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 22px rgba(37, 99, 235, 0.25);
+        }
+
+        .predict-button:active {
+            transform: translateY(0);
+        }
+
+        .predict-button.loading {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        .result {
+            margin-top: 25px;
+
+            padding: 22px;
+
+            border-radius: 15px;
+
+            text-align: center;
+
+            background: #eff6ff;
+
+            border: 1px solid #bfdbfe;
+        }
+
+        .result-icon {
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+
+        .result-label {
+            color: var(--muted);
+
+            font-size: 12px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            font-weight: 700;
+        }
+
+        .result h2 {
+            margin-top: 6px;
+
+            font-size: 24px;
+
+            color: #1d4ed8;
+        }
+
+        .result p {
+            margin-top: 7px;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .side-card {
+            margin-bottom: 20px;
+        }
+
+        .side-title {
+            font-size: 17px;
+            font-weight: 750;
+
+            margin-bottom: 18px;
+        }
+
+        .aqi-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 11px 0;
+
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .aqi-item:last-child {
+            border-bottom: none;
+        }
+
+        .aqi-color {
+            width: 12px;
+            height: 12px;
+
+            border-radius: 50%;
+        }
+
+        .green {
+            background: #22c55e;
+        }
+
+        .yellow {
+            background: #eab308;
+        }
+
+        .orange {
+            background: #f97316;
+        }
+
+        .red {
+            background: #ef4444;
+        }
+
+        .purple {
+            background: #a855f7;
+        }
+
+        .aqi-name {
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .aqi-range {
+            margin-left: auto;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        .info-text {
+            color: var(--muted);
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+
+            margin: 35px 0 25px;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 950px) {
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: grid;
+
+                grid-template-columns: 1fr 1fr;
+
+                gap: 20px;
+            }
+
+            .side-card {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 750px) {
+
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .container {
+                margin-top: 30px;
+            }
+        }
+
+        @media (max-width: 520px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .status {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🌿
+        </div>
+
+        <span>AirSense</span>
+
+    </div>
+
+
+    <div class="status">
+
+        <span class="status-dot"></span>
+
+        ML Model Online
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="container">
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-badge">
+            RANDOM FOREST • MACHINE LEARNING
+        </div>
+
+        <h1>
+            Air Quality
+            <span>Predictor</span>
+        </h1>
+
+        <p>
+            Enter atmospheric measurements below and let our
+            machine learning model analyze the environmental
+            conditions and predict the air quality.
+        </p>
+
+    </section>
+
+
+    <!-- MAIN GRID -->
+
+    <div class="main-grid">
+
+
+        <!-- =====================
+             FORM CARD
+        ====================== -->
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <div class="card-title">
+                        Environmental Measurements
+                    </div>
+
+                    <div class="card-subtitle">
+                        Enter the current atmospheric readings
+                    </div>
+
+                </div>
+
+                <div class="measurement-badge">
+                    9 FEATURES
+                </div>
+
+            </div>
+
+
+            <form
+                action="/predict"
+                method="POST"
+                id="predictionForm"
+            >
+
+                <div class="form-grid">
+
+
+                    <!-- PM10 -->
+
+                    <div class="form-group">
+
+                        <label for="pm10">
+                            PM10
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input
+                                type="number"
+                                step="any"
+                                min="0"
+                                id="pm10"
+                                name="pm10"
+                                placeholder="e.g. 15"
+                                required
+                            >
+
+                        </div>
+
+                        <span class="unit">
+                            µg/m³
+                        </span>
+
+                    </div>
+
+
+                    <!-- PM2.5 -->
+
+                    <div class="form-group">
+
+                        <label for="pm2_5">
+                            PM2.5
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input
+                                type="number"
+                                step="any"
+                                min="0"
+                                id="pm2_5"
+                                name="pm2_5"
+                                placeholder="e.g. 8"
+                                required
+                            >
+
+                        </div>
+
+                        <span class="unit">
+                            µg/m³
+                        </span>
+
+                    </div>
+
+
+                    <!-- CO -->
+
+                    <div class="form-group">
+
+                        <label for="carbon_monoxide">
+                            Carbon Monoxide
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            min="0"
+                            id="carbon_monoxide"
+                            name="carbon_monoxide"
+                            placeholder="e.g. 100"
+                            required
+                        >
+
+                        <span class="unit">
+                            µg/m³
+                        </span>
+
+                    </div>
+
+
+                    <!-- NO2 -->
+
+                    <div class="form-group">
+
+                        <label for="nitrogen_dioxide">
+                            Nitrogen Dioxide
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            min="0"
+                            id="nitrogen_dioxide"
+                            name="nitrogen_dioxide"
+                            placeholder="e.g. 15"
+                            required
+                        >
+
+                        <span class="unit">
+                            µg/m³
+                        </span>
+
+                    </div>
+
+
+                    <!-- SO2 -->
+
+                    <div class="form-group">
+
+                        <label for="sulphur_dioxide">
+                            Sulphur Dioxide
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            min="0"
+                            id="sulphur_dioxide"
+                            name="sulphur_dioxide"
+                            placeholder="e.g. 5"
+                            required
+                        >
+
+                        <span class="unit">
+                            µg/m³
+                        </span>
+
+                    </div>
+
+
+                    <!-- Ozone -->
+
+                    <div class="form-group">
+
+                        <label for="ozone">
+                            Ozone
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            min="0"
+                            id="ozone"
+                            name="ozone"
+                            placeholder="e.g. 50"
+                            required
+                        >
+
+                        <span class="unit">
+                            µg/m³
+                        </span>
+
+                    </div>
+
+
+                    <!-- AOD -->
+
+                    <div class="form-group">
+
+                        <label for="aerosol_optical_depth">
+                            Aerosol Optical Depth
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            min="0"
+                            id="aerosol_optical_depth"
+                            name="aerosol_optical_depth"
+                            placeholder="e.g. 0.1"
+                            required
+                        >
+
+                        <span class="unit">
+                            Optical depth
+                        </span>
+
+                    </div>
+
+
+                    <!-- Dust -->
+
+                    <div class="form-group">
+
+                        <label for="dust">
+                            Dust
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            min="0"
+                            id="dust"
+                            name="dust"
+                            placeholder="e.g. 2"
+                            required
+                        >
+
+                        <span class="unit">
+                            µg/m³
+                        </span>
+
+                    </div>
+
+
+                    <!-- UV -->
+
+                    <div class="form-group">
+
+                        <label for="uv_index">
+                            UV Index
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            min="0"
+                            id="uv_index"
+                            name="uv_index"
+                            placeholder="e.g. 2"
+                            required
+                        >
+
+                        <span class="unit">
+                            Index
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="predict-button"
+                    id="predictButton"
+                >
+
+                    🔍 &nbsp; Predict Air Quality
+
+                </button>
+
+            </form>
+
+
+            <!-- =====================
+                 RESULT
+            ====================== -->
+
+            {% if prediction_text %}
+
+            <div class="result">
+
+                <div class="result-icon">
+                    🌿
+                </div>
+
+                <div class="result-label">
+                    Prediction Result
+                </div>
+
+                <h2>
+                    {{ prediction_text }}
+                </h2>
+
+                <p>
+                    Result generated by the trained
+                    Random Forest classification model.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =====================
+             SIDEBAR
+        ====================== -->
+
+        <aside class="sidebar">
+
+
+            <!-- AQI CARD -->
+
+            <div class="card side-card">
+
+                <div class="side-title">
+                    Air Quality Reference
+                </div>
+
+
+                <div class="aqi-item">
+
+                    <span class="aqi-color green"></span>
+
+                    <span class="aqi-name">
+                        Good
+                    </span>
+
+                    <span class="aqi-range">
+                        0–50
+                    </span>
+
+                </div>
+
+
+                <div class="aqi-item">
+
+                    <span class="aqi-color yellow"></span>
+
+                    <span class="aqi-name">
+                        Moderate
+                    </span>
+
+                    <span class="aqi-range">
+                        51–100
+                    </span>
+
+                </div>
+
+
+                <div class="aqi-item">
+
+                    <span class="aqi-color orange"></span>
+
+                    <span class="aqi-name">
+                        Unhealthy Sensitive
+                    </span>
+
+                    <span class="aqi-range">
+                        101–150
+                    </span>
+
+                </div>
+
+
+                <div class="aqi-item">
+
+                    <span class="aqi-color red"></span>
+
+                    <span class="aqi-name">
+                        Unhealthy
+                    </span>
+
+                    <span class="aqi-range">
+                        151–200
+                    </span>
+
+                </div>
+
+
+                <div class="aqi-item">
+
+                    <span class="aqi-color purple"></span>
+
+                    <span class="aqi-name">
+                        Very Unhealthy
+                    </span>
+
+                    <span class="aqi-range">
+                        201–300
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- MODEL INFO -->
+
+            <div class="card side-card">
+
+                <div class="side-title">
+                    About the Model
+                </div>
+
+                <p class="info-text">
+
+                    This application uses a trained
+                    Random Forest classification model.
+
+                    <br><br>
+
+                    The model analyzes nine environmental
+                    features and predicts the air quality
+                    category learned from the training data.
+
+                </p>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+
+    <footer>
+
+        AirSense • Air Quality Prediction System
+        <br>
+        Flask + Python + Scikit-learn
+
+    </footer>
+
+</main>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+    const form = document.getElementById("predictionForm");
+
+    const button = document.getElementById("predictButton");
+
+
+    form.addEventListener("submit", function () {
+
+        button.classList.add("loading");
+
+        button.innerHTML = "⏳ &nbsp; Analyzing Air Quality...";
+
+        button.disabled = true;
+
+    });
+
+
+    /*
+        Restore button when the browser navigates
+        back to the page.
+    */
+
+    window.addEventListener("pageshow", function () {
+
+        button.classList.remove("loading");
+
+        button.disabled = false;
+
+        button.innerHTML = "🔍 &nbsp; Predict Air Quality";
+
+    });
+
+</script>
+
+</body>
+</html>
