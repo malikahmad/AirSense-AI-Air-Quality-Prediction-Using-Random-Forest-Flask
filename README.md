@@ -49,12 +49,13 @@ The application maps the model output to Good and Poor. Use the same units, colu
 AirSense-AI/
 ├── app.py
 ├── forest_model.pkl
+├── requirements.txt
 ├── templates/
 │   └── index.html
 └── README.md
 ~~~
 
-The repository currently does not include a requirements.txt. Install the dependencies listed below, or add a pinned dependency file after confirming the versions used to train and serialize the model.
+The repository includes a `requirements.txt` with bounded dependency ranges. The exact scikit-learn version used to serialize `forest_model.pkl` has not been independently confirmed; if model loading reports a version mismatch, use the original training environment's scikit-learn version.
 
 ## Getting started
 
@@ -85,7 +86,7 @@ source .venv/bin/activate
 
 ~~~bash
 python -m pip install --upgrade pip
-pip install Flask pandas joblib scikit-learn
+pip install -r requirements.txt
 ~~~
 
 For reproducible results, use the scikit-learn version compatible with the version that created forest_model.pkl. Loading a pickle/joblib model with a different scikit-learn version can produce warnings or errors.
@@ -119,7 +120,7 @@ The current application starts Flask with debug mode enabled for local developme
 
 ## Model and evaluation
 
-The repository contains the serialized model artifact, but this README does not claim a specific accuracy or benchmark. For a meaningful evaluation, document:
+The repository includes the serialized model artifact. Its training-time scikit-learn version has not been confirmed, and this README does not claim a specific accuracy or benchmark. For a meaningful evaluation, document:
 
 - Dataset source, license, date range, and geographic coverage.
 - Measurement units and missing-value handling.
@@ -150,7 +151,7 @@ Do not interpret the binary class output as an official AQI category unless the 
 
 ## Future improvements
 
-- Add a pinned requirements.txt and automated setup checks.
+- Record the exact training-time Python and scikit-learn versions once verified.
 - Validate missing, non-numeric, and out-of-range form values.
 - Add a documented training/evaluation pipeline.
 - Display the model version and input units in the interface.
