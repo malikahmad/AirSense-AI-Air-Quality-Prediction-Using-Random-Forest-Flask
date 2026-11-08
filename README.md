@@ -1,20 +1,19 @@
-# 🌿 AirSense AI – Air Quality Prediction System
+# AirSense AI — Random Forest Air-Quality Classification
 
-AirSense AI is a machine learning-powered web application designed to predict air quality using environmental and atmospheric measurements. Built with Python, Flask, and a trained Random Forest classification model, the application analyzes nine environmental parameters to classify air quality as **Good** or **Poor**.
+AirSense AI is a Flask web application that uses a trained Random Forest classifier to categorize environmental measurements into **Good** or **Poor** air-quality classes.
 
-Users can enter pollutant concentrations and environmental indicators through a responsive web interface and receive an instant machine learning prediction.
+The application accepts nine input parameters through a responsive form and returns the model's predicted class.
 
-### 🚀 Key Features
-- Air quality classification using a trained Random Forest model.
-- Prediction based on nine environmental parameters.
-- Interactive and responsive web dashboard.
-- Real-time predictions through a Flask backend.
-- User-friendly environmental measurement form.
-- Air quality reference information.
-- Pre-trained model integration using Joblib.
+## Features
 
-### 🧠 Machine Learning Model
-The application uses a Random Forest Classifier with nine input features:
+- Random Forest classification.
+- Nine environmental input parameters.
+- Flask prediction backend.
+- Responsive web interface.
+- Pre-trained model integration with Joblib.
+- Good/Poor output labels.
+
+## Input features
 
 1. PM10
 2. PM2.5
@@ -26,23 +25,21 @@ The application uses a Random Forest Classifier with nine input features:
 8. Dust
 9. UV Index
 
-**Prediction Classes:**
-- Good
-- Poor
+## Technology
 
-### 🛠️ Tech Stack
-- **Programming Language:** Python
-- **Machine Learning:** Scikit-learn, Random Forest
-- **Backend:** Flask
-- **Data Processing:** Pandas
-- **Model Serialization:** Joblib
-- **Frontend:** HTML5, CSS3, JavaScript
-- **UI Design:** Responsive Dashboard
+| Area | Technology |
+|---|---|
+| Language | Python |
+| Machine learning | scikit-learn, Random Forest |
+| Backend | Flask |
+| Data processing | pandas |
+| Model persistence | Joblib |
+| Frontend | HTML, CSS, JavaScript |
 
-### 📂 Project Structure
+## Project structure
+
 ```text
 AirSense-AI/
-│
 ├── app.py
 ├── forest_model.pkl
 ├── templates/
@@ -51,27 +48,44 @@ AirSense-AI/
 └── README.md
 ```
 
-### ⚙️ Installation & Setup
+## Setup
+
 ```bash
-git clone YOUR_REPOSITORY_URL
-cd AirSense-AI
+git clone https://github.com/malikahmad/AirSense-AI-Air-Quality-Prediction-Using-Random-Forest-Flask.git
+cd AirSense-AI-Air-Quality-Prediction-Using-Random-Forest-Flask
 
-pip install flask pandas joblib scikit-learn
+python -m venv .venv
+```
 
+Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+If the repository's requirements file is unavailable or incomplete, install the dependencies used by the application: Flask, pandas, Joblib, and scikit-learn.
+
+## Run
+
+```bash
 python app.py
 ```
 
-Open your browser:
-```text
-http://127.0.0.1:5000
-```
+Open [http://127.0.0.1:5000](http://127.0.0.1:5000).
 
-### 🎯 Project Objective
-The objective of AirSense AI is to demonstrate how machine learning can be integrated into a web application to analyze environmental data and provide accessible air quality predictions.
+## Evaluation recommendations
 
-**Note:** Predictions depend on the training data and model. This project is an educational machine learning application, not a certified air quality monitoring or public health assessment system.
+Before publishing performance claims, document the dataset source, feature units, preprocessing steps, train/test split, class balance, and model version. Report per-class precision, recall, F1-score, confusion matrix, and results on an untouched test set.
 
-### 👨‍💻 Author
-Developed as an AI/ML and Full-Stack Machine Learning project.
+## Limitations
 
-**Areas:** Artificial Intelligence | Machine Learning | Environmental Analytics | Flask Development
+- Output depends on the training data and the feature definitions used during model development.
+- The Good/Poor categories are model labels, not official regulatory air-quality categories.
+- User-entered measurements may be inaccurate or use incompatible units.
+- This application is an educational machine-learning demonstration, not a certified air-quality monitoring or public-health assessment system.
+
+## Author
+
+**Ahmad Zulfiqar** — [GitHub](https://github.com/malikahmad) · [LinkedIn](https://www.linkedin.com/in/malik-ahmad-06abb31a1/)
