@@ -36,7 +36,7 @@ The application accepts nine input parameters through a responsive form and retu
 | Model persistence | Joblib |
 | Frontend | HTML, CSS, JavaScript |
 
-## Project structure
+## Repository structure
 
 ```text
 AirSense-AI/
@@ -44,11 +44,12 @@ AirSense-AI/
 ├── forest_model.pkl
 ├── templates/
 │   └── index.html
-├── requirements.txt
 └── README.md
 ```
 
 ## Setup
+
+The repository currently does not include a `requirements.txt`, so install the application's runtime dependencies directly:
 
 ```bash
 git clone https://github.com/malikahmad/AirSense-AI-Air-Quality-Prediction-Using-Random-Forest-Flask.git
@@ -62,10 +63,8 @@ Windows PowerShell:
 ```powershell
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+pip install Flask pandas joblib scikit-learn
 ```
-
-If the repository's requirements file is unavailable or incomplete, install the dependencies used by the application: Flask, pandas, Joblib, and scikit-learn.
 
 ## Run
 
